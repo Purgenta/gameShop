@@ -23,6 +23,11 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public UserModel findByEmail(String email) {
+        return this.userRepository.findByEmail(email);
+    }
+
+    @Override
     public List<UserModel> getUsers() {
         return userRepository.findAll();
     }

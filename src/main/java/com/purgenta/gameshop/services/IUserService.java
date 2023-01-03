@@ -8,5 +8,7 @@ import java.util.List;
 public interface IUserService {
     Map<String, String> createUser(UserModel user);
 
+    UserModel findByEmail(String email);
+
     List<UserModel> getUsers();
 }
