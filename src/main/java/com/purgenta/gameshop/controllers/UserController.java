@@ -3,19 +3,21 @@ package com.purgenta.gameshop.controllers;
 import com.purgenta.gameshop.models.UserModel;
 import com.purgenta.gameshop.services.IUserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("user")
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private IUserService userService;
+
+    private final IUserService userService;
 
     @PostMapping("create")
     @CrossOrigin("*")
@@ -27,5 +29,13 @@ public class UserController {
     @CrossOrigin("*")
     public List<UserModel> getUsers() {
         return userService.getUsers();
+    }
+
+    @GetMapping("hello")
+    @CrossOrigin("*")
+    public Map<String, String> hello() {
+        Map<String, String> helloJson = new HashMap<>();
+        helloJson.put("hello", "Welcome from a secured endpoint");
+        return helloJson;
     }
 }
