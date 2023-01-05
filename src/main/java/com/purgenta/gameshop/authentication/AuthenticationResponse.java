@@ -8,4 +8,5 @@ import lombok.*;
 @Builder
 public class AuthenticationResponse {
     String token;
+    String role;
 }

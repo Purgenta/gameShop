@@ -1,17 +1,21 @@
 package com.purgenta.gameshop.config;
 
+import com.purgenta.gameshop.repositories.IUserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Map;
-import java.security.Key;
 import java.util.function.Function;
 
 
@@ -19,8 +23,15 @@ import java.util.function.Function;
 public class JwtService {
     private static final String SIGN_KEY = "4A614E645267556B58703273357638792F423F4528482B4B6250655368566D59";
 
+    @Autowired
+    private IUserRepository userRepository;
+
     public String extractEmail(String jwt) {
         return extractClaim(jwt, Claims::getSubject);
+    }
+
+    public Date extractExpirationTime(String jwt) {
+        return extractClaim(jwt, Claims::getExpiration);
     }
 
     public <T> T extractClaim(String jwt, Function<Claims, T> claimsResolver) {
@@ -33,12 +44,15 @@ public class JwtService {
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        Set<String> userRoles = new HashSet<>();
+        userRoles.add(userRepository.findByEmail(userDetails.getUsername()).getRole().name());
+        extraClaims.put("Roles", userRoles);
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 86400))
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -58,7 +72,6 @@ public class JwtService {
     }
 
     public boolean isTokenExpired(String jwt) {
-        final Date expirationDate = extractClaim(jwt, Claims::getExpiration);
-        return expirationDate.before(new Date());
+        return extractExpirationTime(jwt).before(new Date());
     }
 }
