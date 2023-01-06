@@ -1,6 +1,5 @@
 package com.purgenta.gameshop.controllers;
 
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +14,6 @@ public class AdminController {
 
     @GetMapping("/hello")
     @CrossOrigin("*")
-    @Secured("ADMIN")
     public Map<String, String> sayHelloToAdmin() {
         Map<String, String> helloAdmin = new HashMap<>();
         helloAdmin.put("hello", "Hello to our website admin");

@@ -19,7 +19,7 @@ public class ApplicationConfiguration {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByEmail(username);
+        return userRepository::findByEmail;
     }
 
     @Bean

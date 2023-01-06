@@ -18,7 +18,7 @@ public class UserController {
 
     @GetMapping("/hello")
     @CrossOrigin("*")
-    public List<String> hello() {;
+    public List<String> hello() {
         return List.of("one", "two");
     }
 }

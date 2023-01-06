@@ -1,9 +1,9 @@
 package com.purgenta.gameshop.authentication;
 
+import com.purgenta.gameshop.validation.ValidatePassword;
 import com.purgenta.gameshop.validation.ValidateUniqueEmail;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +20,6 @@ public class RegisterRequest {
     private String email;
 
     @NotNull
-    @Pattern(regexp = "^[A-Za-z0-9_.]{5,16}$", message = "Password must be between 5 and 16 characters long")
+    @ValidatePassword
     private String password;
 }
