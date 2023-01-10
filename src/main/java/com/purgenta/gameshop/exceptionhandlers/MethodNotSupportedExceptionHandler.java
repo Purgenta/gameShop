@@ -11,7 +11,7 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class MethodNotSupportedExceptionHandler {
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public Map<String, String> invalidRoute() {
         Map<String, String> invalidRequest = new HashMap<>();

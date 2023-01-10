@@ -1,14 +1,18 @@
 package com.purgenta.gameshop.services;
 
-import com.purgenta.gameshop.models.UserModel;
+import com.purgenta.gameshop.models.User;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 public interface IUserService {
-    Map<String, String> createUser(UserModel user);
 
-    UserModel findByEmail(String email);
+    User getAuthenticatedUser();
 
-    List<UserModel> getUsers();
+    Map<String, String> createUser(User user);
+
+    User findByEmail(String email);
+
+    List<User> getUsers();
+
 }

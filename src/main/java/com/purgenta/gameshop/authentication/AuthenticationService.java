@@ -1,8 +1,7 @@
 package com.purgenta.gameshop.authentication;
 
-import com.purgenta.gameshop.config.JwtService;
 import com.purgenta.gameshop.models.Role;
-import com.purgenta.gameshop.models.UserModel;
+import com.purgenta.gameshop.models.User;
 import com.purgenta.gameshop.repositories.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,24 +19,25 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
         var user =
-                UserModel.builder()
+                User.builder()
                         .email(request.getEmail())
                         .password(passwordEncoder.encode(request.getPassword()))
-                        .role(Role.USER)
-                        .gender("male")
+                        .role(Role.ROLE_USER)
                         .build();
         userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder().token(jwtToken).role(Role.USER.name()).build();
+        var accessToken = jwtService.generateToken(user, jwtService.getAccessTokenTime(), "accessToken");
+        var refreshToken = jwtService.generateToken(user, jwtService.getRefreshTokenTime(), "refreshToken");
+        return AuthenticationResponse.builder().accessToken(accessToken).role(Role.ROLE_USER.name()).refreshToken(refreshToken).build();
     }
 
-    public AuthenticationResponse login(AuthenticationRequest request) {
+    public AuthenticationResponse login(LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(),
                         request.getPassword())
         );
         var user = userRepository.findByEmail(request.getEmail());
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder().token(jwtToken).role(user.getRole().name()).build();
+        var accessToken = jwtService.generateToken(user, jwtService.getAccessTokenTime(), "accessToken");
+        var refreshToken = jwtService.generateToken(user, jwtService.getRefreshTokenTime(), "refreshToken");
+        return AuthenticationResponse.builder().accessToken(accessToken).role(user.getRole().name()).refreshToken(refreshToken).build();
     }
 }

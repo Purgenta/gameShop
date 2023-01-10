@@ -1,22 +1,20 @@
 package com.purgenta.gameshop.authentication;
 
-import com.purgenta.gameshop.authentication.AuthenticationRequest;
-import com.purgenta.gameshop.authentication.AuthenticationResponse;
-import com.purgenta.gameshop.authentication.AuthenticationService;
-import com.purgenta.gameshop.authentication.RegisterRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/authentication")
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
+    private final JwtService jwtService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid RegisterRequest request) {
@@ -24,8 +22,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody @Valid LoginRequest request) {
         return ResponseEntity.ok(authenticationService.login(request));
+    }
+
+    @GetMapping("/refreshToken")
+    public ResponseEntity<Map<String, String>> refreshToken(@NotNull HttpServletRequest request) {
+        return jwtService.processRefreshToken(request);
     }
 
 }
