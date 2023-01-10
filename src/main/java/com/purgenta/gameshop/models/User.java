@@ -1,8 +1,8 @@
 package com.purgenta.gameshop.models;
 
 import com.purgenta.gameshop.validation.ValidatePassword;
+import com.purgenta.gameshop.validation.ValidateUniqueEmail;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,20 +21,22 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Table(name = "user")
-public class UserModel implements UserDetails {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "user_id")
     private Long user_id;
-    @NotNull(message = "Email can't be null")
-    @Email
-    @Column(name = "email")
+
+    @NotNull
+    @ValidateUniqueEmail
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @NotNull
     @ValidatePassword
-    @Column(name = "password")
-    @NotNull(message = "Password can't be null")
+    @Column(nullable = false)
     private String password;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
 
     @Override

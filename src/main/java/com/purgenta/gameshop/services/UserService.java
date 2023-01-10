@@ -1,21 +1,28 @@
 package com.purgenta.gameshop.services;
 
-import com.purgenta.gameshop.models.UserModel;
+import com.purgenta.gameshop.models.User;
 import com.purgenta.gameshop.repositories.IUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service()
+@RequiredArgsConstructor
 public class UserService implements IUserService {
-    @Autowired
-    private IUserRepository userRepository;
+    private final IUserRepository userRepository;
+
+    public User getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return findByEmail(authentication.getName());
+    }
 
     @Override
-    public Map<String, String> createUser(UserModel user) {
+    public Map<String, String> createUser(User user) {
         userRepository.save(user);
         Map<String, String> response = new HashMap<>();
         response.put("success", "User successfully created");
@@ -23,13 +30,14 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserModel findByEmail(String email) {
+    public User findByEmail(String email) {
         return this.userRepository.findByEmail(email);
     }
 
     @Override
-    public List<UserModel> getUsers() {
+    public List<User> getUsers() {
         return userRepository.findAll();
     }
+
 
 }

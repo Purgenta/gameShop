@@ -3,6 +3,7 @@ package com.purgenta.gameshop.authentication;
 import com.purgenta.gameshop.validation.ValidatePassword;
 import com.purgenta.gameshop.validation.ValidateUniqueEmail;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,12 +15,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class RegisterRequest {
-    @Email
+
     @NotNull
+    @NotBlank
+    @Email
     @ValidateUniqueEmail
     private String email;
 
     @NotNull
+    @NotBlank
     @ValidatePassword
     private String password;
 }

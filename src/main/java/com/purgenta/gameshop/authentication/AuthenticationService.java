@@ -1,7 +1,7 @@
 package com.purgenta.gameshop.authentication;
 
 import com.purgenta.gameshop.models.Role;
-import com.purgenta.gameshop.models.UserModel;
+import com.purgenta.gameshop.models.User;
 import com.purgenta.gameshop.repositories.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +19,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
         var user =
-                UserModel.builder()
+                User.builder()
                         .email(request.getEmail())
                         .password(passwordEncoder.encode(request.getPassword()))
                         .role(Role.ROLE_USER)

@@ -1,6 +1,6 @@
 package com.purgenta.gameshop.validation;
 
-import com.purgenta.gameshop.models.UserModel;
+import com.purgenta.gameshop.models.User;
 import com.purgenta.gameshop.repositories.IUserRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class EmailUniqueValidator implements ConstraintValidator<ValidateUniqueEmail, String> {
+
     @Autowired
     private IUserRepository userRepository;
 
@@ -19,7 +20,7 @@ public class EmailUniqueValidator implements ConstraintValidator<ValidateUniqueE
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
-        UserModel user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email);
         return user == null;
     }
 }

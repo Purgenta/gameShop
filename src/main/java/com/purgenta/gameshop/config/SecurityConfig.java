@@ -20,6 +20,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
+    private static final String[] whiteList =
+            {
+                    "/authentication/**",
+                    "/swagger-ui/*", "/v3/api-docs",
+                    "/v3/api-docs/swagger-config"
+            };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -27,7 +33,7 @@ public class SecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/authentication/**").permitAll()
+                .requestMatchers(whiteList).permitAll()
                 .requestMatchers("/admin/**", "/orders/**").hasRole("ADMIN")
                 .requestMatchers("/productManagement/**").hasAnyRole("ADMIN", "CONTENT_MANAGER")
                 .anyRequest()
