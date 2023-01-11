@@ -20,6 +20,17 @@ public class Game {
     @ValidateUniqueTitle
     @Column(unique = true, nullable = false)
     private String title;
-    private double description;
+
+    @NotNull
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String description;
+    @ManyToOne
+    private User user;
+
+    @ManyToOne
+    private GameCategory category;
+
+    @ManyToOne
+    private Publisher publisher;
 
 }

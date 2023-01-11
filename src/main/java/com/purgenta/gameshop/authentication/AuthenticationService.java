@@ -9,6 +9,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service()
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -23,6 +25,7 @@ public class AuthenticationService {
                         .email(request.getEmail())
                         .password(passwordEncoder.encode(request.getPassword()))
                         .role(Role.ROLE_USER)
+                        .registered_at(LocalDate.now())
                         .build();
         userRepository.save(user);
         var accessToken = jwtService.generateToken(user, jwtService.getAccessTokenTime(), "accessToken");
