@@ -47,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         } catch (ExpiredJwtException exception) {
             response.setHeader("error", exception.getMessage());
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             Map<String, String> error = new HashMap<>();
             error.put("error_message", exception.getMessage());
             response.setContentType("application/json");

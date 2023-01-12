@@ -4,12 +4,17 @@ import com.purgenta.gameshop.models.Role;
 import com.purgenta.gameshop.models.User;
 import com.purgenta.gameshop.repositories.IUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service()
 @RequiredArgsConstructor
@@ -33,14 +38,21 @@ public class AuthenticationService {
         return AuthenticationResponse.builder().accessToken(accessToken).role(Role.ROLE_USER.name()).refreshToken(refreshToken).build();
     }
 
-    public AuthenticationResponse login(LoginRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(),
-                        request.getPassword())
-        );
+    public ResponseEntity<?> login(LoginRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(),
+                            request.getPassword())
+            );
+        } catch (BadCredentialsException exception) {
+            Map<String, String> responseBadCredentials = new HashMap<>();
+            responseBadCredentials.put("errorMessage", "Bad credentials");
+            return new ResponseEntity<>(responseBadCredentials, HttpStatus.BAD_REQUEST);
+        }
         var user = userRepository.findByEmail(request.getEmail());
         var accessToken = jwtService.generateToken(user, jwtService.getAccessTokenTime(), "accessToken");
         var refreshToken = jwtService.generateToken(user, jwtService.getRefreshTokenTime(), "refreshToken");
-        return AuthenticationResponse.builder().accessToken(accessToken).role(user.getRole().name()).refreshToken(refreshToken).build();
+        AuthenticationResponse response = AuthenticationResponse.builder().accessToken(accessToken).role(user.getRole().name()).refreshToken(refreshToken).build();
+        return ResponseEntity.ok(response);
     }
 }

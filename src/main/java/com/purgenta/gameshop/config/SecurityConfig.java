@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -29,22 +30,24 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
         httpSecurity
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers(whiteList).permitAll()
-                .requestMatchers("/admin/**", "/orders/**").hasRole("ADMIN")
+                .requestMatchers("/admin/**", "/orders/**,/user/{id}").hasRole("ADMIN")
                 .requestMatchers("/productManagement/**").hasAnyRole("ADMIN", "CONTENT_MANAGER")
                 .anyRequest()
                 .authenticated()
+                .and()
+                .exceptionHandling()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
         return httpSecurity.build();
     }
 }
