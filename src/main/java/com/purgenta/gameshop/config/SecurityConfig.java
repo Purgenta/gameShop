@@ -2,6 +2,8 @@ package com.purgenta.gameshop.config;
 
 
 import com.purgenta.gameshop.authentication.JwtAuthenticationFilter;
+import com.purgenta.gameshop.exceptionhandlers.AccessDeniedHandler;
+import com.purgenta.gameshop.exceptionhandlers.UnauthorizedHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -19,6 +22,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
+    private final AccessDeniedHandler accessDeniedHandler;
+    private final UnauthorizedHandler unauthorizedHandler;
     private final AuthenticationProvider authenticationProvider;
     private static final String[] whiteList =
             {
@@ -29,22 +34,26 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
         httpSecurity
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers(whiteList).permitAll()
-                .requestMatchers("/admin/**", "/orders/**").hasRole("ADMIN")
+                .requestMatchers("/admin/**", "/orders/**,/user/{id}").hasRole("ADMIN")
                 .requestMatchers("/productManagement/**").hasAnyRole("ADMIN", "CONTENT_MANAGER")
                 .anyRequest()
                 .authenticated()
+                .and()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+                .and()
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
         return httpSecurity.build();
     }
 }

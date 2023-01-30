@@ -29,7 +29,7 @@ public class JwtService {
     private final UserDetailsService userDetailsService;
 
     @Getter
-    private final int accessTokenTime = 900000;
+    private final int accessTokenTime = 1200000;
     @Getter
     private final int refreshTokenTime = 86400000;
 
@@ -94,6 +94,7 @@ public class JwtService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         if (validToken(jwt, userDetails, "refreshToken")) {
             refreshResponse.put("accessToken", generateToken(userDetails, getAccessTokenTime(), "accessToken"));
+            refreshResponse.put("role", userDetails.getAuthorities().toArray()[0].toString());
             return new ResponseEntity<>(refreshResponse, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(refreshResponse, HttpStatus.BAD_REQUEST);
