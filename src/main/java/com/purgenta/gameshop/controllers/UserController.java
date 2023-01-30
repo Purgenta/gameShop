@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -15,5 +17,10 @@ public class UserController {
     @GetMapping("/profile")
     public User profile() {
         return userService.getAuthenticatedUser();
+    }
+
+    @GetMapping("/list")
+    public List<String> getList() {
+        return List.of("one","two","three");
     }
 }

@@ -46,10 +46,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
         } catch (ExpiredJwtException exception) {
-            response.setHeader("error", exception.getMessage());
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             Map<String, String> error = new HashMap<>();
-            error.put("error_message", exception.getMessage());
+            error.put("errorMessage", exception.getMessage());
             response.setContentType("application/json");
             new ObjectMapper().writeValue(response.getOutputStream(), error);
             return;
@@ -66,4 +65,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
     }
+
 }

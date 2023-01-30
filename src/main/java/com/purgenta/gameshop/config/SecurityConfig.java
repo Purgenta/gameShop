@@ -2,6 +2,8 @@ package com.purgenta.gameshop.config;
 
 
 import com.purgenta.gameshop.authentication.JwtAuthenticationFilter;
+import com.purgenta.gameshop.exceptionhandlers.AccessDeniedHandler;
+import com.purgenta.gameshop.exceptionhandlers.UnauthorizedHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +22,8 @@ import org.springframework.web.cors.CorsConfiguration;
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
+    private final AccessDeniedHandler accessDeniedHandler;
+    private final UnauthorizedHandler unauthorizedHandler;
     private final AuthenticationProvider authenticationProvider;
     private static final String[] whiteList =
             {
@@ -41,7 +45,9 @@ public class SecurityConfig {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .exceptionHandling()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+                .and()
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
