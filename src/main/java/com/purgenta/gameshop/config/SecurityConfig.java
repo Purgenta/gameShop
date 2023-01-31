@@ -29,7 +29,7 @@ public class SecurityConfig {
             {
                     "/authentication/**",
                     "/swagger-ui/*", "/v3/api-docs",
-                    "/v3/api-docs/swagger-config"
+                    "/v3/api-docs/swagger-config","/files/**"
             };
 
     @Bean
@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers(whiteList).permitAll()
-                .requestMatchers("/admin/**", "/orders/**,/user/{id}").hasRole("ADMIN")
+                .requestMatchers("/admin/**", "/orders/**,/user/{id},/publishers/addPublisher").hasRole("ADMIN")
                 .requestMatchers("/productManagement/**").hasAnyRole("ADMIN", "CONTENT_MANAGER")
                 .anyRequest()
                 .authenticated()

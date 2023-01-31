@@ -1,7 +1,7 @@
 package com.purgenta.gameshop.authentication;
 
-import com.purgenta.gameshop.validation.ValidatePassword;
-import com.purgenta.gameshop.validation.ValidateUniqueEmail;
+import com.purgenta.gameshop.validation.user.ValidatePassword;
+import com.purgenta.gameshop.validation.user.ValidateUniqueEmail;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package com.purgenta.gameshop.validation;
+package com.purgenta.gameshop.validation.game;
 
 
 import com.purgenta.gameshop.repositories.IGameRepository;

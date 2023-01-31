@@ -15,4 +15,8 @@ public class GameCategory {
     @Size(min = 5, max = 20)
     @Column(unique = true, nullable = false)
     private String name;
+    @NotNull
+    @Size(min=20, max=120)
+    @Column(nullable = false,columnDefinition = "TEXT")
+    private String description;
 }

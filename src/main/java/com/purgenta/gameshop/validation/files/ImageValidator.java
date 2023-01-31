@@ -1,10 +1,11 @@
-package com.purgenta.gameshop.validation;
+package com.purgenta.gameshop.validation.files;
+
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.web.multipart.MultipartFile;
 
-public class ImageValidator implements ConstraintValidator<ValidatePassword, MultipartFile> {
+public class ImageValidator implements ConstraintValidator<ValidateImage, MultipartFile> {
 
 
     @Override

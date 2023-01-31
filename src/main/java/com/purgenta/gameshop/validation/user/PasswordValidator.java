@@ -1,5 +1,6 @@
-package com.purgenta.gameshop.validation;
+package com.purgenta.gameshop.validation.user;
 
+import com.purgenta.gameshop.validation.user.ValidatePassword;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

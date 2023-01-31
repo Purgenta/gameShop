@@ -1,4 +1,4 @@
-package com.purgenta.gameshop.validation;
+package com.purgenta.gameshop.validation.files;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

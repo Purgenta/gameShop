@@ -29,7 +29,7 @@ public class JwtService {
     private final UserDetailsService userDetailsService;
 
     @Getter
-    private final int accessTokenTime = 1200000;
+    private final int accessTokenTime = 86400000;
     @Getter
     private final int refreshTokenTime = 86400000;
 
