@@ -1,5 +1,6 @@
-package com.purgenta.gameshop.validation;
+package com.purgenta.gameshop.validation.game;
 
+import com.purgenta.gameshop.validation.game.GameTitleUniqueValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

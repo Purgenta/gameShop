@@ -1,6 +1,6 @@
 package com.purgenta.gameshop.authentication;
 
-import com.purgenta.gameshop.validation.ValidatePassword;
+import com.purgenta.gameshop.validation.user.ValidatePassword;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

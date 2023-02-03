@@ -1,4 +1,4 @@
-package com.purgenta.gameshop.validation;
+package com.purgenta.gameshop.validation.game;
 
 
 import com.purgenta.gameshop.repositories.IGameRepository;
@@ -21,6 +21,6 @@ public class GameTitleUniqueValidator implements ConstraintValidator<ValidateUni
 
     @Override
     public boolean isValid(String title, ConstraintValidatorContext constraintValidatorContext) {
-        return iGameRepository.findByTitle(title) == null;
+        return iGameRepository.findByTitle(title).isEmpty();
     }
 }

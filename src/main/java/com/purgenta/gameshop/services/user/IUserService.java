@@ -1,4 +1,4 @@
-package com.purgenta.gameshop.services;
+package com.purgenta.gameshop.services.user;
 
 import com.purgenta.gameshop.models.User;
 

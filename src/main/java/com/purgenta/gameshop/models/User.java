@@ -1,8 +1,8 @@
 package com.purgenta.gameshop.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.purgenta.gameshop.validation.ValidatePassword;
-import com.purgenta.gameshop.validation.ValidateUniqueEmail;
+import com.purgenta.gameshop.validation.user.ValidatePassword;
+import com.purgenta.gameshop.validation.user.ValidateUniqueEmail;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

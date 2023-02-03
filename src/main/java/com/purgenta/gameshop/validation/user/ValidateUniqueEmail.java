@@ -1,4 +1,4 @@
-package com.purgenta.gameshop.validation;
+package com.purgenta.gameshop.validation.user;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -8,11 +8,11 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = PasswordValidator.class)
-public @interface ValidatePassword {
+@Constraint(validatedBy = EmailUniqueValidator.class)
+public @interface ValidateUniqueEmail {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
-    String message() default "Password must be between 5 and 16 characters long";
+    String message() default "Account already exists under the email address";
 }

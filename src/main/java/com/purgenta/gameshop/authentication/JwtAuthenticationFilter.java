@@ -1,6 +1,5 @@
 package com.purgenta.gameshop.authentication;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,8 +17,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -36,6 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         final String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             filterChain.doFilter(request, response);
             return;
         }
@@ -47,10 +45,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         } catch (ExpiredJwtException exception) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            Map<String, String> error = new HashMap<>();
-            error.put("errorMessage", exception.getMessage());
-            response.setContentType("application/json");
-            new ObjectMapper().writeValue(response.getOutputStream(), error);
             return;
         }
         final String email = jwtService.extractEmail(jwt);

@@ -3,7 +3,6 @@ package com.purgenta.gameshop.config;
 
 import com.purgenta.gameshop.authentication.JwtAuthenticationFilter;
 import com.purgenta.gameshop.exceptionhandlers.AccessDeniedHandler;
-import com.purgenta.gameshop.exceptionhandlers.UnauthorizedHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,32 +21,27 @@ import org.springframework.web.cors.CorsConfiguration;
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
-    private final AccessDeniedHandler accessDeniedHandler;
-    private final UnauthorizedHandler unauthorizedHandler;
     private final AuthenticationProvider authenticationProvider;
     private static final String[] whiteList =
             {
                     "/authentication/**",
                     "/swagger-ui/*", "/v3/api-docs",
-                    "/v3/api-docs/swagger-config"
+                    "/v3/api-docs/swagger-config","/files/**"
             };
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain SecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
         httpSecurity
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers(whiteList).permitAll()
-                .requestMatchers("/admin/**", "/orders/**,/user/{id}").hasRole("ADMIN")
+                .requestMatchers("/admin/**", "/orders/**,/user/{id},/publishers/addPublisher").hasRole("ADMIN")
                 .requestMatchers("/productManagement/**").hasAnyRole("ADMIN", "CONTENT_MANAGER")
                 .anyRequest()
-                .authenticated()
-                .and()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
-                .and()
-                .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+                .authenticated().and()
+                .exceptionHandling().authenticationEntryPoint(new AccessDeniedHandler())
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -1,5 +1,6 @@
 package com.purgenta.gameshop.models;
 
+import com.purgenta.gameshop.validation.publisher.ValidateUniquePublisher;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -13,8 +14,10 @@ public class Publisher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int publisher_id;
 
+
     @NotNull
-    @Column(nullable = false)
+    @ValidateUniquePublisher
+    @Column(nullable = false,unique = true)
     private String name;
 
     @OneToMany(mappedBy = "publisher")
