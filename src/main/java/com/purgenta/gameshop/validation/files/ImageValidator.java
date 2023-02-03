@@ -5,14 +5,22 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.web.multipart.MultipartFile;
 
-public class ImageValidator implements ConstraintValidator<ValidateImage, MultipartFile> {
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+
+public class ImageValidator implements ConstraintValidator<ValidateImages, MultipartFile[]> {
 
 
     @Override
-    public boolean isValid(MultipartFile multipartFile, ConstraintValidatorContext constraintValidatorContext) {
-        String contentType = multipartFile.getContentType();
-        assert contentType != null;
-        return isSupportedContentType(contentType);
+    public boolean isValid(MultipartFile[] multipartFile, ConstraintValidatorContext constraintValidatorContext) {
+        AtomicBoolean valid = new AtomicBoolean(true);
+        Arrays.asList(multipartFile).forEach(file-> {
+            String contentType = file.getContentType();
+            assert contentType != null;
+            valid.set(isSupportedContentType(contentType));
+        });
+        return valid.get();
     }
     private boolean isSupportedContentType(String contentType) {
         return contentType.equals("image/png")

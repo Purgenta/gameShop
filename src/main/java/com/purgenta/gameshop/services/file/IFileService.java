@@ -8,4 +8,6 @@ import java.io.IOException;
 public interface IFileService {
     String saveProductImage (MultipartFile imageFile) throws IOException;
     ResponseEntity<?> getProductImage(String photoName);
+
+    void removeProductImage(String photoPath) throws IOException;
 }

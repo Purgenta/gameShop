@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +22,9 @@ public class FileService implements IFileService {
     public String saveProductImage(MultipartFile imageFile) throws IOException {
         byte[] bytes = imageFile.getBytes();
         String fileName = imageFile.getOriginalFilename();
-        String filePath = String.format("%s/%s/%s",photosPath,productsPath,fileName);
+        long now = Instant.now().getEpochSecond();
+        String constructedName = String.format("%s%s",now,fileName);
+        String filePath = String.format("%s/%s/%s",photosPath,productsPath,constructedName);
         Path path = Paths.get(filePath);
         Files.write(path,bytes);
         return filePath;
@@ -48,7 +51,11 @@ public class FileService implements IFileService {
         } catch (IOException e) {
             Map<String,String> response= new HashMap<>();
             response.put("errorMessage","no such image exists");
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
+    }
+    public void removeProductImage(String productImage) throws IOException {
+        Path path = Paths.get(productImage);
+        Files.delete(path);
     }
 }

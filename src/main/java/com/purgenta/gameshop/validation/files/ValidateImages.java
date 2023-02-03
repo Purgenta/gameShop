@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {ImageValidator.class})
-public @interface ValidateImage {
+public @interface ValidateImages {
     String message() default "File has to be an image file";
 
     Class<?>[] groups() default {};

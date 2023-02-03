@@ -1,15 +1,13 @@
-package com.purgenta.gameshop.requests;
+package com.purgenta.gameshop.dto;
 
-import com.purgenta.gameshop.validation.files.ValidateImage;
 import com.purgenta.gameshop.validation.game.ValidateUniqueTitle;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class GameRequest{
+public class GameDto {
     @NotNull
     @ValidateUniqueTitle
     private String title;
@@ -27,6 +25,4 @@ public class GameRequest{
     @NotNull
     @Min(1)
     private double price;
-    @ValidateImage
-    private MultipartFile image;
 }

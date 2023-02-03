@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @Data
@@ -18,7 +19,8 @@ public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
+    @Column(nullable = false)
+    private boolean isSelling;
     @NotNull
     @Column(nullable = false)
     private double price;
@@ -41,8 +43,9 @@ public class Game {
     @ManyToOne
     private Publisher publisher;
 
+    @OneToMany(mappedBy = "game")
+    private List<GameImage> gameImageList;
     private int releaseYear;
 
-    private String img_path;
 
 }
