@@ -1,5 +1,6 @@
 package com.purgenta.gameshop.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.purgenta.gameshop.validation.game.ValidateUniqueTitle;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -34,18 +35,19 @@ public class Game {
     @Size(min = 15,max = 40)
     @Column(nullable = false)
     private String description;
+    @JsonIgnore
     @ManyToOne
     private User user;
-
+    @JsonIgnore
     @ManyToOne
     private GameCategory category;
-
+    @JsonIgnore
     @ManyToOne
     private Publisher publisher;
 
+
+    @JsonIgnore
     @OneToMany(mappedBy = "game")
     private List<GameImage> gameImageList;
     private int releaseYear;
-
-
 }

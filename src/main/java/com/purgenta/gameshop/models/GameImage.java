@@ -1,5 +1,6 @@
 package com.purgenta.gameshop.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -17,11 +18,13 @@ public class GameImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     private Game game;
 
     @NotNull
     private String fileName;
+    @JsonIgnore
     @NotNull
     private boolean isActive;
 }

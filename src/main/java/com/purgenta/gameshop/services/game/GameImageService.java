@@ -3,7 +3,7 @@ package com.purgenta.gameshop.services.game;
 import com.purgenta.gameshop.models.Game;
 import com.purgenta.gameshop.models.GameImage;
 import com.purgenta.gameshop.repositories.IGameImageRepository;
-import com.purgenta.gameshop.dto.RemoveImageDto;
+import com.purgenta.gameshop.requests.RemoveImageRequest;
 import com.purgenta.gameshop.services.file.IFileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +28,8 @@ public class GameImageService implements IGameImageService{
     }
 
 
-    public ResponseEntity<?> removeImage(@Valid RemoveImageDto removeImageDto) {
-        Optional<GameImage> gameImage = gameImageRepository.findById(removeImageDto.getImageId());
+    public ResponseEntity<?> removeImage(@Valid RemoveImageRequest removeImageRequest) {
+        Optional<GameImage> gameImage = gameImageRepository.findById(removeImageRequest.getImageId());
         if(gameImage.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         GameImage image = gameImage.get();
         gameImageRepository.delete(image);

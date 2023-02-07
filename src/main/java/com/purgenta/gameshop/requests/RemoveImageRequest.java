@@ -1,10 +1,10 @@
-package com.purgenta.gameshop.dto;
+package com.purgenta.gameshop.requests;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 
 @Data
-public class RemoveImageDto {
+public class RemoveImageRequest {
     @NotNull
     Long imageId;
 }

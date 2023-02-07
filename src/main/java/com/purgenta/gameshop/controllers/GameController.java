@@ -1,8 +1,9 @@
 package com.purgenta.gameshop.controllers;
 
-import com.purgenta.gameshop.dto.GameImageDto;
-import com.purgenta.gameshop.dto.GameDto;
-import com.purgenta.gameshop.dto.RemoveImageDto;
+import com.purgenta.gameshop.dto.GameFilterDto;
+import com.purgenta.gameshop.requests.GameImageRequest;
+import com.purgenta.gameshop.requests.GameRequest;
+import com.purgenta.gameshop.requests.RemoveImageRequest;
 import com.purgenta.gameshop.services.game.IGameImageService;
 import com.purgenta.gameshop.services.game.IGameService;
 import jakarta.validation.Valid;
@@ -19,29 +20,33 @@ public class GameController {
     private final IGameService gameService;
 
     private final IGameImageService gameImageService;
+    @GetMapping("/getGames")
+    public ResponseEntity<?> getGames(GameFilterDto gameFilterDto) {
+        return gameService.getGames(gameFilterDto);
+    }
     @PostMapping("/addGameImage")
-    public ResponseEntity<Map<String,String>> addGameImages(@Valid GameImageDto gameImageDto) {
-       return gameService.addGameImages(gameImageDto.getImages(), gameImageDto.getGameId());
+    public ResponseEntity<Map<String,String>> addGameImages(@Valid GameImageRequest gameImageRequest) {
+       return gameService.addGameImages(gameImageRequest.getImages(), gameImageRequest.getGameId());
     }
 
     @PostMapping("/addGame")
-    public ResponseEntity<?> addGame(@RequestBody @Valid GameDto gameDto) {
-        return gameService.addGame(gameDto);
+    public ResponseEntity<?> addGame(@RequestBody @Valid GameRequest gameRequest) {
+        return gameService.addGame(gameRequest);
     }
     @DeleteMapping("/deleteGame/{gameId}")
     public ResponseEntity<Map<String,String>> deleteGame(@PathVariable("gameId") int gameId) {
         return gameService.deleteGame(gameId);
     }
     @PutMapping("/updateGame/{gameId}")
-    public ResponseEntity<Map<String,String>> updateGame(@RequestBody @Valid GameDto gameDto, @PathVariable int gameId) {
-        return gameService.updateGame(gameDto,gameId);
+    public ResponseEntity<Map<String,String>> updateGame(@RequestBody @Valid GameRequest gameRequest, @PathVariable int gameId) {
+        return gameService.updateGame(gameRequest,gameId);
     }
     @GetMapping("/game/{gameId}")
     public ResponseEntity<?> getGame(@PathVariable int gameId) {
         return gameService.getGame(gameId);
     }
     @DeleteMapping("/removeImage")
-    public ResponseEntity<?> removeImage(@Valid RemoveImageDto removeImageDto) {
-        return gameImageService.removeImage(removeImageDto);
+    public ResponseEntity<?> removeImage(@Valid RemoveImageRequest removeImageRequest) {
+        return gameImageService.removeImage(removeImageRequest);
     }
 }

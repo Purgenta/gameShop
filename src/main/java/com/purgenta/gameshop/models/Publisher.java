@@ -1,5 +1,6 @@
 package com.purgenta.gameshop.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.purgenta.gameshop.validation.publisher.ValidateUniquePublisher;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -20,6 +21,7 @@ public class Publisher {
     @Column(nullable = false,unique = true)
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "publisher")
     private List<Game> publishedGames;
 }

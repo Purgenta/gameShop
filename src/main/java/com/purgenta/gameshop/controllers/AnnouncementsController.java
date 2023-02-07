@@ -1,2 +1,11 @@
-package com.purgenta.gameshop.controllers;public class AnnouncementsController {
+package com.purgenta.gameshop.controllers;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/announcements")
+public class AnnouncementsController {
 }

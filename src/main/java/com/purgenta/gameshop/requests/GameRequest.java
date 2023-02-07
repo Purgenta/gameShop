@@ -1,4 +1,4 @@
-package com.purgenta.gameshop.dto;
+package com.purgenta.gameshop.requests;
 
 import com.purgenta.gameshop.validation.game.ValidateUniqueTitle;
 import jakarta.validation.constraints.Min;
@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class GameDto {
+public class GameRequest {
     @NotNull
     @ValidateUniqueTitle
     private String title;

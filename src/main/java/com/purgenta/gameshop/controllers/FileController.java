@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/files")
 public class FileController {
     private final IFileService fileService;
-    @GetMapping("/products/{photoName}")
+    @GetMapping("/photos/products/{photoName}")
     public ResponseEntity<?> getProductImage(@PathVariable("photoName") String photoName) {
-        return fileService.getProductImage(photoName);
+        return fileService.getProductImage(String.format("/photos/products/%s",photoName));
     }
 }
