@@ -2,6 +2,7 @@ package com.purgenta.gameshop.controllers;
 
 import com.purgenta.gameshop.authentication.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -18,18 +19,18 @@ public class AuthenticationController {
     private final JwtService jwtService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid RegisterRequest request) {
-        return ResponseEntity.ok(authenticationService.register(request));
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid RegisterRequest request, HttpServletResponse response) {
+        return ResponseEntity.ok(authenticationService.register(request,response));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid LoginRequest request) {
-        return authenticationService.login(request);
+    public ResponseEntity<?> login(@RequestBody @Valid LoginRequest request,HttpServletResponse response) {
+        return authenticationService.login(request,response);
     }
 
     @GetMapping("/refreshToken")
-    public ResponseEntity<Map<String, String>> refreshToken(@NotNull HttpServletRequest request) {
-        return jwtService.processRefreshToken(request);
+    public ResponseEntity<Map<String, String>> refreshToken(@NotNull HttpServletRequest request,HttpServletResponse response) {
+        return jwtService.processRefreshToken(request,response);
     }
 
 }

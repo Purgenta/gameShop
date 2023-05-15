@@ -5,7 +5,9 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,24 +16,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-
+import io.github.cdimascio.dotenv.Dotenv;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-
 @Service()
 @RequiredArgsConstructor
 public class JwtService {
-    private static final String SIGN_KEY = "4A614E645267556B58703273357638792F423F4528482B4B6250655368566D59";
+    private static final String SIGN_KEY = Dotenv.configure().load().get("JWT_SECRET");
     private final UserDetailsService userDetailsService;
 
     @Getter
-    private final int accessTokenTime = 86400000;
+    private final int accessTokenTime = 10000;
     @Getter
-    private final int refreshTokenTime = 86400000;
+    private final int refreshTokenTime = 100000;
 
     public String extractEmail(String jwt) {
         return extractClaim(jwt, Claims::getSubject);
@@ -80,19 +81,21 @@ public class JwtService {
         return extractExpirationTime(jwt).before(new Date());
     }
 
-    public ResponseEntity<Map<String, String>> processRefreshToken(HttpServletRequest request) {
+    public ResponseEntity<Map<String, String>> processRefreshToken(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String> refreshResponse = new HashMap<>();
-        final String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            return new ResponseEntity<>(refreshResponse, HttpStatus.BAD_REQUEST);
+        Cookie[] cookies  = request.getCookies();
+        String refresh = null;
+        for(Cookie cookie : cookies) {
+            if(cookie.getName().equals("refresh")) {
+                refresh = cookie.getValue();
+            }
         }
-        final String jwt = authorizationHeader.substring(7);
-        final String email = extractEmail(jwt);
+        final String email = extractEmail(refresh);
         if (email == null && SecurityContextHolder.getContext().getAuthentication() != null) {
             return new ResponseEntity<>(refreshResponse, HttpStatus.BAD_REQUEST);
         }
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        if (validToken(jwt, userDetails, "refreshToken")) {
+        if (validToken(refresh, userDetails, "refreshToken")) {
             refreshResponse.put("accessToken", generateToken(userDetails, getAccessTokenTime(), "accessToken"));
             refreshResponse.put("role", userDetails.getAuthorities().toArray()[0].toString());
             return new ResponseEntity<>(refreshResponse, HttpStatus.OK);

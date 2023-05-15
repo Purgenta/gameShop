@@ -10,5 +10,4 @@ public class AuthenticationResponse {
     String accessToken;
     String role;
 
-    String refreshToken;
 }

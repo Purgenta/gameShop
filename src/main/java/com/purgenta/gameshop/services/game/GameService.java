@@ -9,7 +9,6 @@ import com.purgenta.gameshop.models.Publisher;
 import com.purgenta.gameshop.models.User;
 import com.purgenta.gameshop.repositories.IGameRepository;
 import com.purgenta.gameshop.requests.GameRequest;
-import com.purgenta.gameshop.services.file.IFileService;
 import com.purgenta.gameshop.services.publisher.IPublisherService;
 import com.purgenta.gameshop.services.user.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -20,86 +19,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class GameService implements IGameService {
-    private final IFileService fileService;
     private final IPublisherService publisherService;
     private final GameSpecification gameSpecification;
     private final IUserService userService;
     private final IGameCategoryService iGameCategoryService;
-    private final IGameImageService imageService;
     private final IGameRepository gameRepository;
-    @Override
-    public ResponseEntity<Map<String, String>> addGameImages(MultipartFile[] images,int gameId) {
-        Map<String,String> response = new HashMap<>();
-
-            Optional<Game> game = gameRepository.findById(gameId);
-            if(game.isEmpty()) {
-                response.put("errorMessage","No such game exists");
-                return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
-            }
-            else {
-                Game affected = game.get();
-                try {
-                    List<String> imagePaths = new ArrayList<>();
-                    Arrays.stream(images).toList().forEach(image -> {
-                        try {
-                            String imagePath = fileService.saveProductImage(image);
-                            imagePaths.add(imagePath);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-                    imagePaths.forEach(productImage -> imageService.saveImage(productImage,affected));
-                }
-                catch (Exception e) {
-                    response.put("error","Issues with processing your image file");
-                    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-                }
-            }
-        return new ResponseEntity<>(response,HttpStatus.CREATED);
-    }
-
-    @Override
-    public ResponseEntity<Map<String, String>> addGame(GameRequest gameRequest) {
-        Map<String,String> response = new HashMap<>();
-        gameRepository.save(buildGame(gameRequest));
-        response.put("success","Product was created");
-        return new ResponseEntity<>(response,HttpStatus.CREATED);
-    }
-    public ResponseEntity<Map<String,String>> deleteGame(int gameId) {
-        Optional<Game> game = gameRepository.findById(gameId);
-        if(game.isPresent() && game.get().isSelling()) {
-            Game deletedGame = game.get();
-            deletedGame.setSelling(false);
-            gameRepository.save(deletedGame);
-            return ResponseEntity.ok().build();
-        }
-        else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @Override
-    public ResponseEntity<Map<String, String>> updateGame(GameRequest gameRequest, int gameId) {
-        Map<String,String> response = new HashMap<>();
-        Optional<Game> gameToUpdate = gameRepository.findById(gameId);
-        if(gameToUpdate.isEmpty()) {
-            response.put("errorMessage","No such game exists");
-            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
-        }
-        Game game = buildGame(gameRequest);
-        game.setId(gameId);
-        gameRepository.save(game);
-        response.put("success","successfully updated");
-        return new ResponseEntity<>(response,HttpStatus.OK);
-    }
 
     @Override
     public Game buildGame(GameRequest gameRequest) {
@@ -140,7 +70,6 @@ public class GameService implements IGameService {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         catch (Exception e) {
-            System.out.println(e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -167,9 +96,16 @@ public class GameService implements IGameService {
         }
         return orders;
     }
-    public static GameDto buildGameDto(Game game) {
+    public ResponseEntity<?> getFilterValues () {
+        Map<String,Double> minMax = gameRepository.findMinMax();
+        List<GameCategory> gameCategories = iGameCategoryService.getCategories();
+        Map<String,Object> response = new HashMap<>();
+        response.put("filter",minMax);
+        response.put("categories",gameCategories);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+    public GameDto buildGameDto(Game game) {
        return GameDto.builder().gameImages(game.getGameImageList()).id(game.getId()).gameCategory(game.getCategory()).price(game.getPrice())
                 .title(game.getTitle()).releaseYear(game.getReleaseYear()).publisher(game.getPublisher()).gameImages(game.getGameImageList()).build();
     }
-
 }

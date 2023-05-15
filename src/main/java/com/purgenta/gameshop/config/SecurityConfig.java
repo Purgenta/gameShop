@@ -14,7 +14,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 @Configuration
 @EnableWebSecurity
@@ -25,11 +24,12 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     private static final String[] whiteList =
             {
+                    "/cart/items",
                     "/authentication/**",
                     "/v3/api-docs",
                     "/swagger-resources/**",
-                    "/swagger-ui/**","/files/**", "/photos/products/**",
-                    "/games/getGames"
+                    "/swagger-ui/**","/files/**", "/photos/products/**","/games/filterValues",
+                    "/games/getGames",
             };
 
     @Bean
