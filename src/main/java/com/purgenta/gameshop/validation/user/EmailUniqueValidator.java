@@ -1,8 +1,7 @@
 package com.purgenta.gameshop.validation.user;
 
-import com.purgenta.gameshop.models.User;
+import com.purgenta.gameshop.models.user.User;
 import com.purgenta.gameshop.repositories.IUserRepository;
-import com.purgenta.gameshop.validation.user.ValidateUniqueEmail;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;

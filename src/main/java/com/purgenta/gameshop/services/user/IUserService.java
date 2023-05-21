@@ -1,6 +1,6 @@
 package com.purgenta.gameshop.services.user;
 
-import com.purgenta.gameshop.models.User;
+import com.purgenta.gameshop.models.user.User;
 
 import java.util.List;
 import java.util.Optional;

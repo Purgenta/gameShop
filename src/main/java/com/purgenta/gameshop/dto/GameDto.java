@@ -1,8 +1,8 @@
 package com.purgenta.gameshop.dto;
 
-import com.purgenta.gameshop.models.GameCategory;
-import com.purgenta.gameshop.models.GameImage;
-import com.purgenta.gameshop.models.Publisher;
+import com.purgenta.gameshop.models.game.GameCategory;
+import com.purgenta.gameshop.models.game.GameImage;
+import com.purgenta.gameshop.models.game.Publisher;
 import lombok.Builder;
 import lombok.Data;
 

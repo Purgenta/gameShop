@@ -1,6 +1,8 @@
-package com.purgenta.gameshop.models;
+package com.purgenta.gameshop.models.game;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.purgenta.gameshop.models.cart.CartItem;
+import com.purgenta.gameshop.models.user.User;
 import com.purgenta.gameshop.validation.game.ValidateUniqueTitle;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -32,7 +34,7 @@ public class Game {
     private String title;
 
     @NotNull
-    @Size(min = 15,max = 40)
+    @Size(min = 15,max = 200)
     @Column(nullable = false)
     private String description;
     @JsonIgnore
@@ -44,6 +46,10 @@ public class Game {
     @JsonIgnore
     @ManyToOne
     private Publisher publisher;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "game")
+    private List<CartItem> cartItems;
 
 
     @JsonIgnore

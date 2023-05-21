@@ -1,4 +1,4 @@
-package com.purgenta.gameshop.models;
+package com.purgenta.gameshop.models.game;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

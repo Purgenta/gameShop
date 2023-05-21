@@ -1,6 +1,6 @@
 package com.purgenta.gameshop.services.user;
 
-import com.purgenta.gameshop.models.User;
+import com.purgenta.gameshop.models.user.User;
 import com.purgenta.gameshop.repositories.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

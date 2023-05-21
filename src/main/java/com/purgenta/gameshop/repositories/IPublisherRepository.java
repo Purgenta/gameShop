@@ -1,6 +1,6 @@
 package com.purgenta.gameshop.repositories;
 
-import com.purgenta.gameshop.models.Publisher;
+import com.purgenta.gameshop.models.game.Publisher;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

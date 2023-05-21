@@ -1,6 +1,6 @@
 package com.purgenta.gameshop.dto;
 
-import com.purgenta.gameshop.models.Game;
+import com.purgenta.gameshop.models.game.Game;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 

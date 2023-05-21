@@ -1,6 +1,6 @@
 package com.purgenta.gameshop.services.game;
 
-import com.purgenta.gameshop.models.Game;
+import com.purgenta.gameshop.models.game.Game;
 import com.purgenta.gameshop.requests.RemoveImageRequest;
 import org.springframework.http.ResponseEntity;
 

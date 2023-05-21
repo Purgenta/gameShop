@@ -1,6 +1,6 @@
 package com.purgenta.gameshop.controllers;
 
-import com.purgenta.gameshop.models.Publisher;
+import com.purgenta.gameshop.models.game.Publisher;
 import com.purgenta.gameshop.services.publisher.IPublisherService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

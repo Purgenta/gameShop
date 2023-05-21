@@ -1,4 +1,4 @@
-package com.purgenta.gameshop.models;
+package com.purgenta.gameshop.models.user;
 
 public enum Role {
     ROLE_ADMIN,

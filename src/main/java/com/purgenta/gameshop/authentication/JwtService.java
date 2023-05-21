@@ -1,5 +1,7 @@
 package com.purgenta.gameshop.authentication;
 
+import com.purgenta.gameshop.repositories.ITokenRepository;
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -7,7 +9,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import io.github.cdimascio.dotenv.Dotenv;
+
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,11 +29,11 @@ import java.util.function.Function;
 public class JwtService {
     private static final String SIGN_KEY = Dotenv.configure().load().get("JWT_SECRET");
     private final UserDetailsService userDetailsService;
-
+    private final ITokenRepository iTokenRepository;
     @Getter
-    private final int accessTokenTime = 10000;
+    private final int accessTokenTime = 900000;
     @Getter
-    private final int refreshTokenTime = 100000;
+    private final int refreshTokenTime = 86400000;
 
     public String extractEmail(String jwt) {
         return extractClaim(jwt, Claims::getSubject);
@@ -81,9 +82,9 @@ public class JwtService {
         return extractExpirationTime(jwt).before(new Date());
     }
 
-    public ResponseEntity<Map<String, String>> processRefreshToken(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, String> refreshResponse = new HashMap<>();
+    public ResponseEntity<Map<String, String>> processRefreshToken(HttpServletRequest request) {
         Cookie[] cookies  = request.getCookies();
+        if(cookies == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         String refresh = null;
         for(Cookie cookie : cookies) {
             if(cookie.getName().equals("refresh")) {
@@ -92,16 +93,16 @@ public class JwtService {
         }
         final String email = extractEmail(refresh);
         if (email == null && SecurityContextHolder.getContext().getAuthentication() != null) {
-            return new ResponseEntity<>(refreshResponse, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        if (validToken(refresh, userDetails, "refreshToken")) {
-            refreshResponse.put("accessToken", generateToken(userDetails, getAccessTokenTime(), "accessToken"));
-            refreshResponse.put("role", userDetails.getAuthorities().toArray()[0].toString());
-            return new ResponseEntity<>(refreshResponse, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(refreshResponse, HttpStatus.BAD_REQUEST);
+        if (!validToken(refresh, userDetails, "refreshToken") || iTokenRepository.findTokenByTokenAndIsRevoked(refresh,false).isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+        Map<String, String> refreshResponse = new HashMap<>();
+        refreshResponse.put("accessToken", generateToken(userDetails, getAccessTokenTime(), "accessToken"));
+        refreshResponse.put("role", userDetails.getAuthorities().toArray()[0].toString());
+        return new ResponseEntity<>(refreshResponse, HttpStatus.OK);
     }
 
     public String extractTokenType(String jwt) {

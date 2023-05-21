@@ -1,8 +1,13 @@
 package com.purgenta.gameshop.authentication;
 
-import com.purgenta.gameshop.models.Role;
-import com.purgenta.gameshop.models.User;
+import com.purgenta.gameshop.models.user.Role;
+import com.purgenta.gameshop.models.user.Token;
+import com.purgenta.gameshop.models.user.User;
+import com.purgenta.gameshop.repositories.ITokenRepository;
 import com.purgenta.gameshop.repositories.IUserRepository;
+import com.purgenta.gameshop.requests.authentication.LoginRequest;
+import com.purgenta.gameshop.requests.authentication.RegisterRequest;
+import com.purgenta.gameshop.response.authentication.AuthenticationResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +27,7 @@ import jakarta.servlet.http.Cookie;
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final IUserRepository userRepository;
+    private final ITokenRepository iTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -37,11 +43,12 @@ public class AuthenticationService {
         userRepository.save(user);
         var accessToken = jwtService.generateToken(user, jwtService.getAccessTokenTime(), "accessToken");
         var refreshToken = jwtService.generateToken(user, jwtService.getRefreshTokenTime(), "refreshToken");
+        iTokenRepository.save(new Token(refreshToken,user,false));
         setRefreshTokenCookie(refreshToken,response);
         return AuthenticationResponse.builder().accessToken(accessToken).role(Role.ROLE_USER.name()).build();
     }
 
-    public ResponseEntity<?> login(LoginRequest request,HttpServletResponse response) {
+    public ResponseEntity<?> login(LoginRequest request, HttpServletResponse response) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(),
@@ -55,6 +62,7 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail());
         var accessToken = jwtService.generateToken(user, jwtService.getAccessTokenTime(), "accessToken");
         var refreshToken = jwtService.generateToken(user, jwtService.getRefreshTokenTime(), "refreshToken");
+        iTokenRepository.save(new Token(refreshToken,user,false));
         AuthenticationResponse authenticationResponse = AuthenticationResponse.builder().accessToken(accessToken).role(user.getRole().name()).build();
         setRefreshTokenCookie(refreshToken,response);
         return ResponseEntity.ok(authenticationResponse);

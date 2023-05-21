@@ -1,4 +1,4 @@
-package com.purgenta.gameshop.models;
+package com.purgenta.gameshop.models.game;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.purgenta.gameshop.validation.publisher.ValidateUniquePublisher;

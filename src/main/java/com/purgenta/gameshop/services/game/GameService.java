@@ -3,10 +3,10 @@ package com.purgenta.gameshop.services.game;
 import com.purgenta.gameshop.dto.GameDto;
 import com.purgenta.gameshop.dto.GameFilterDto;
 import com.purgenta.gameshop.dto.GameSpecification;
-import com.purgenta.gameshop.models.Game;
-import com.purgenta.gameshop.models.GameCategory;
-import com.purgenta.gameshop.models.Publisher;
-import com.purgenta.gameshop.models.User;
+import com.purgenta.gameshop.models.game.Game;
+import com.purgenta.gameshop.models.game.GameCategory;
+import com.purgenta.gameshop.models.game.Publisher;
+import com.purgenta.gameshop.models.user.User;
 import com.purgenta.gameshop.repositories.IGameRepository;
 import com.purgenta.gameshop.requests.GameRequest;
 import com.purgenta.gameshop.services.publisher.IPublisherService;
@@ -73,6 +73,12 @@ public class GameService implements IGameService {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Override
+    public Optional<Game> findGameById(int game_id) {
+        return gameRepository.findById(game_id);
+    }
+
     private Sort.Direction getSortDirection(String direction) {
         if (direction.equals("asc")) {
             return Sort.Direction.ASC;

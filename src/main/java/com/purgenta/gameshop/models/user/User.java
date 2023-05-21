@@ -1,6 +1,7 @@
-package com.purgenta.gameshop.models;
+package com.purgenta.gameshop.models.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.purgenta.gameshop.models.game.Game;
 import com.purgenta.gameshop.validation.user.ValidatePassword;
 import com.purgenta.gameshop.validation.user.ValidateUniqueEmail;
 import jakarta.persistence.*;
@@ -41,6 +42,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Role role;
 
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Token> token;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Game> user_games;
 

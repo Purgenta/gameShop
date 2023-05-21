@@ -1,4 +1,4 @@
-package com.purgenta.gameshop.authentication;
+package com.purgenta.gameshop.response.authentication;
 
 import lombok.*;
 
