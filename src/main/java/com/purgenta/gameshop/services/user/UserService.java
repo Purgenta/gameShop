@@ -17,11 +17,11 @@ public class UserService implements IUserService {
 
     public User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return findByEmail(authentication.getName());
+        return (User) authentication;
     }
 
     @Override
-    public User findByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         return this.userRepository.findByEmail(email);
     }
 

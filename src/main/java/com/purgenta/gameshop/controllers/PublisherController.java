@@ -18,6 +18,10 @@ public class PublisherController {
     public ResponseEntity<?> addPublisher(@RequestBody @Valid Publisher publisher) {
         return publisherService.addPublisher(publisher);
     }
+    @PutMapping("/updatePublisher/{publisher_id}")
+    public ResponseEntity<?> updatePublisher(@RequestBody @Valid Publisher publisher, @PathVariable int publisher_id) {
+        return publisherService.updatePublisher(publisher,publisher_id);
+    }
     @GetMapping("/getPublishers")
     public List<Publisher> getPublishers() {
         return publisherService.getPublishers();

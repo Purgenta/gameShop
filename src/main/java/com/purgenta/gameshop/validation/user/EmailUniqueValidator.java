@@ -7,6 +7,8 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class EmailUniqueValidator implements ConstraintValidator<ValidateUniqueEmail, String> {
 
@@ -20,7 +22,7 @@ public class EmailUniqueValidator implements ConstraintValidator<ValidateUniqueE
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
-        User user = userRepository.findByEmail(email);
-        return user == null;
+        Optional<User> user = userRepository.findByEmail(email);
+        return user.isEmpty();
     }
 }

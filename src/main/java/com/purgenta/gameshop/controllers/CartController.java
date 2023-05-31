@@ -21,9 +21,9 @@ public class CartController {
     public ResponseEntity<?> getUserCartCount() {
         return cartService.cartItemCount();
     }
-    @DeleteMapping("deleteCartItem")
-    public ResponseEntity<?> deleteCartItem(@Valid @RequestBody AddCartItemRequest addCartItemRequest) {
-        return cartService.deleteCartItem(addCartItemRequest.getGame_id());
+    @DeleteMapping("/deleteCartItem/{gameId}")
+    public ResponseEntity<?> deleteCartItem( @PathVariable int gameId) {
+        return cartService.deleteCartItem(gameId);
     }
     @PostMapping("addCartItem")
     public ResponseEntity<?> addCartItem(@Valid @RequestBody AddCartItemRequest addCartItemRequest) {
@@ -31,6 +31,6 @@ public class CartController {
     }
     @PostMapping("setCartItem")
     public ResponseEntity<?> setCartItem(@Valid @RequestBody SetCartItemRequest setCartItemRequest) {
-        return cartService.setCartItem(setCartItemRequest.getGameId(), setCartItemRequest.getQuantity());
+        return cartService.setCartItem(setCartItemRequest.getGame_id(), setCartItemRequest.getQuantity());
     }
 }

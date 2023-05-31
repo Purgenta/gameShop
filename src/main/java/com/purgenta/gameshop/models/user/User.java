@@ -5,6 +5,7 @@ import com.purgenta.gameshop.models.game.Game;
 import com.purgenta.gameshop.validation.user.ValidatePassword;
 import com.purgenta.gameshop.validation.user.ValidateUniqueEmail;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -23,7 +23,7 @@ public class GameImage {
     private Game game;
 
     @NotNull
-    private String fileName;
+    private String url;
     @JsonIgnore
     @NotNull
     private boolean isActive;

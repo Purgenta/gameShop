@@ -8,7 +8,7 @@ import lombok.Data;
 public class SetCartItemRequest {
     @NotNull
     @Min(0)
-    private Integer gameId;
+    private Integer game_id;
     @Min(1)
     private Integer quantity;
 }

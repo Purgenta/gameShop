@@ -7,9 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -17,10 +15,7 @@ import java.util.Optional;
 public class PublisherService implements IPublisherService {
 
     private final IPublisherRepository publisherRepository;
-    @Override
-    public Optional<Publisher> getPublisherById(int publisherId) {
-        return publisherRepository.findById(publisherId);
-    }
+
 
     @Override
     public List<Publisher> getPublishers() {
@@ -28,10 +23,29 @@ public class PublisherService implements IPublisherService {
     }
 
     @Override
-    public ResponseEntity<Map<String, String>> addPublisher(Publisher publisher) {
-        Map<String,String> response = new HashMap<>();
-        response.put("success","Successfully created a new publisher");
+    public ResponseEntity<?> updatePublisher(Publisher publisher, int publisherId) {
+        var foundPublisher = getPublisherById(publisherId);
+        if(foundPublisher.isEmpty()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        publisher.setPublisher_id(publisherId);
         publisherRepository.save(publisher);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(publisher,HttpStatus.OK);
+    }
+
+   private Optional<Publisher> getPublisherById(int publisherId) {
+        return this.publisherRepository.findById(publisherId);
+   }
+
+    @Override
+    public ResponseEntity<?> deletePublisher(int publisherId) {
+        var foundPublisher = getPublisherById(publisherId);
+        if(foundPublisher.isEmpty()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        publisherRepository.delete(foundPublisher.get());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> addPublisher(Publisher publisher) {
+        publisherRepository.save(publisher);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

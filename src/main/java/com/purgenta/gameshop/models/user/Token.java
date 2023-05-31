@@ -17,14 +17,11 @@ public class Token {
     private int id;
     private String token;
 
-    public Token(String token, User user, boolean isRevoked) {
-        this.token = token;
-        this.user = user;
-        this.isRevoked = isRevoked;
-    }
+
 
     @ManyToOne
     private User user;
-
-    private boolean isRevoked;
+    @Enumerated
+    private TokenType tokenType;
+    private boolean revoked;
 }

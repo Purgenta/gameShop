@@ -22,6 +22,7 @@ public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @JsonIgnore
     @Column(nullable = false)
     private boolean isSelling;
     @NotNull
@@ -43,7 +44,7 @@ public class Game {
     @JsonIgnore
     @ManyToOne
     private GameCategory category;
-    @JsonIgnore
+
     @ManyToOne
     private Publisher publisher;
 
@@ -52,8 +53,8 @@ public class Game {
     private List<CartItem> cartItems;
 
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "game")
-    private List<GameImage> gameImageList;
+
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "game")
+    private List<GameImage> gameImages;
     private int releaseYear;
 }

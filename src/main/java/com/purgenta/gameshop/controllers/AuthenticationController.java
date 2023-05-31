@@ -1,9 +1,9 @@
 package com.purgenta.gameshop.controllers;
 
-import com.purgenta.gameshop.authentication.*;
 import com.purgenta.gameshop.requests.authentication.LoginRequest;
 import com.purgenta.gameshop.requests.authentication.RegisterRequest;
 import com.purgenta.gameshop.response.authentication.AuthenticationResponse;
+import com.purgenta.gameshop.services.authentication.IAuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -12,14 +12,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/authentication")
 @RequiredArgsConstructor
 public class AuthenticationController {
-    private final AuthenticationService authenticationService;
-    private final JwtService jwtService;
+    private final IAuthenticationService authenticationService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid RegisterRequest request, HttpServletResponse response) {
@@ -32,8 +31,18 @@ public class AuthenticationController {
     }
 
     @GetMapping("/refreshToken")
-    public ResponseEntity<Map<String, String>> refreshToken(@NotNull HttpServletRequest request) {
-        return jwtService.processRefreshToken(request);
+    public void refreshToken(@NotNull HttpServletRequest request,HttpServletResponse response) {
+        try {
+            authenticationService.refreshToken(request,response);
+        }
+        catch (IOException exception) {
+            response.setStatus(401);
+        }
+    }
+    @GetMapping("/logout")
+    public void logout(@NotNull HttpServletResponse response) {
+        authenticationService.logout(response);
+        response.setStatus(200);
     }
 
 }

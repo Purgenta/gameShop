@@ -1,5 +1,6 @@
 package com.purgenta.gameshop.models.cart;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.purgenta.gameshop.models.game.Game;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,9 +18,9 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @JsonIgnore
     @ManyToOne
     private Cart cart;
-
     @ManyToOne
     private Game game;
     private int quantity;

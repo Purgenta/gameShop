@@ -21,7 +21,7 @@ public class AccessDeniedHandler implements AuthenticationEntryPoint {
         response.sendError(HttpServletResponse.SC_FORBIDDEN, "Authorization Failed : " + accessDeniedException.getMessage());
     }
 
-    @ExceptionHandler(value = {InsufficientAuthenticationException.class})
+
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setStatus(401);

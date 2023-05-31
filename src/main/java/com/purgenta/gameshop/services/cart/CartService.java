@@ -31,6 +31,7 @@ public class CartService implements ICartService {
         Optional<Game> game = gameService.findGameById(game_id);
         if(game.isEmpty()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Cart cart = findUserCartOrCreate();
+        int count = cart.getCartItems().size();
         CartItem cartItem;
         Optional<CartItem> foundItem = findCartItem(cart,game.get());
         if(foundItem.isPresent()) {
@@ -38,9 +39,10 @@ public class CartService implements ICartService {
             cartItem.setQuantity(cartItem.getQuantity() + 1);
         } else {
             cartItem = CartItem.builder().cart(cart).quantity(1).game(game.get()).build();
-            iCartItemRepository.save(cartItem);
+            count++;
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        iCartItemRepository.save(cartItem);
+        return new ResponseEntity<>(new CartItemCountResponse(count),HttpStatus.OK);
     }
     public ResponseEntity<?> deleteCartItem(int game_id) {
         Optional<Game> game = gameService.findGameById(game_id);
@@ -48,7 +50,7 @@ public class CartService implements ICartService {
         Cart cart = findUserCartOrCreate();
         Optional<CartItem> foundItem = findCartItem(cart,game.get());
         foundItem.ifPresent(iCartItemRepository::delete);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new CartItemCountResponse(cart.getCartItems().size() -1),HttpStatus.OK);
     }
     @Override
     public ResponseEntity<?> setCartItem(int game_id, int quantity) {
@@ -57,27 +59,31 @@ public class CartService implements ICartService {
         Cart cart = findUserCartOrCreate();
         CartItem cartItem;
         Optional<CartItem> foundItem = findCartItem(cart,game.get());
+        int count = cart.getCartItems().size();
         if(foundItem.isPresent()) {
             cartItem = foundItem.get();
             cartItem.setQuantity(quantity);
         } else {
             cartItem = CartItem.builder().cart(cart).quantity(quantity).game(game.get()).build();
             iCartItemRepository.save(cartItem);
+            count ++;
         }
         iCartItemRepository.save(cartItem);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new CartItemCountResponse(count),HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<?> cartItemCount() {
+        return ResponseEntity.ok(new CartItemCountResponse(  countCart()));
+    }
+    public int countCart() {
         Cart userCart = findUserCartOrCreate();
-        int count = iCartItemRepository.countCartItemByCart(userCart);
-        return ResponseEntity.ok(new CartItemCountResponse(count));
+        return userCart.getCartItems().size();
     }
 
     @Override
     public ResponseEntity<?> getUserCart() {
-        return new ResponseEntity<>(findUserCartOrCreate(),HttpStatus.OK);
+        return new ResponseEntity<>(findUserCartOrCreate().getCartItems(),HttpStatus.OK);
     }
 
     private Cart findUserCartOrCreate() {

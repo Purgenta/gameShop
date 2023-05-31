@@ -9,7 +9,7 @@ public interface IUserService {
 
     User getAuthenticatedUser();
 
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
     Optional<User> findById(Long id);
 

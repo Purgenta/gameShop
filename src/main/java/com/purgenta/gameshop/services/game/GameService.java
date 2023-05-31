@@ -8,7 +8,7 @@ import com.purgenta.gameshop.models.game.GameCategory;
 import com.purgenta.gameshop.models.game.Publisher;
 import com.purgenta.gameshop.models.user.User;
 import com.purgenta.gameshop.repositories.IGameRepository;
-import com.purgenta.gameshop.requests.GameRequest;
+import com.purgenta.gameshop.requests.game.GameRequest;
 import com.purgenta.gameshop.services.publisher.IPublisherService;
 import com.purgenta.gameshop.services.user.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +50,7 @@ public class GameService implements IGameService {
         try {
             List<Sort.Order> orders = orderBy(gameFilterDto.getSort());
             List<Game> games;
-            Pageable pagingSort = PageRequest.of(gameFilterDto.getPage(), gameFilterDto.getSize(),Sort.by(orders));
+            Pageable pagingSort = PageRequest.of(gameFilterDto.getPage() - 1, gameFilterDto.getSize(),Sort.by(orders));
             Page<Game> pageGames;
             pageGames = gameRepository.findAll(gameSpecification.searchForGamesUnderCondition(gameFilterDto),pagingSort);
             games = pageGames.getContent();
@@ -77,6 +77,19 @@ public class GameService implements IGameService {
     @Override
     public Optional<Game> findGameById(int game_id) {
         return gameRepository.findById(game_id);
+    }
+
+    @Override
+    public ResponseEntity<?> addGame(GameRequest request) {
+        return null;
+    }
+    public ResponseEntity<?> deleteGame(int game_id) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> updateGame(GameRequest gameRequest, int game_id) {
+        return null;
     }
 
     private Sort.Direction getSortDirection(String direction) {
@@ -110,8 +123,8 @@ public class GameService implements IGameService {
         response.put("categories",gameCategories);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
-    public GameDto buildGameDto(Game game) {
-       return GameDto.builder().gameImages(game.getGameImageList()).id(game.getId()).gameCategory(game.getCategory()).price(game.getPrice())
-                .title(game.getTitle()).releaseYear(game.getReleaseYear()).publisher(game.getPublisher()).gameImages(game.getGameImageList()).build();
+    private GameDto buildGameDto(Game game) {
+       return GameDto.builder().gameImages(game.getGameImages()).id(game.getId()).gameCategory(game.getCategory()).price(game.getPrice())
+                .title(game.getTitle()).releaseYear(game.getReleaseYear()).publisher(game.getPublisher()).gameImages(game.getGameImages()).build();
     }
 }

@@ -1,4 +1,4 @@
-package com.purgenta.gameshop.requests;
+package com.purgenta.gameshop.requests.game;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

@@ -9,5 +9,7 @@ import lombok.*;
 public class AuthenticationResponse {
     String accessToken;
     String role;
+    String refreshToken;
+    String email;
 
 }

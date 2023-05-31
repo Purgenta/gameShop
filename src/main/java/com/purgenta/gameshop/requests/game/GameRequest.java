@@ -1,4 +1,4 @@
-package com.purgenta.gameshop.requests;
+package com.purgenta.gameshop.requests.game;
 
 import com.purgenta.gameshop.validation.game.ValidateUniqueTitle;
 import jakarta.validation.constraints.Min;
@@ -25,4 +25,5 @@ public class GameRequest {
     @NotNull
     @Min(1)
     private double price;
+    private String image_url;
 }
