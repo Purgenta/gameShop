@@ -24,7 +24,4 @@ public class GameImage {
 
     @NotNull
     private String url;
-    @JsonIgnore
-    @NotNull
-    private boolean isActive;
 }

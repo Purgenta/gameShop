@@ -11,5 +11,6 @@ public interface IPublisherService {
     List<Publisher> getPublishers();
     ResponseEntity<?> updatePublisher(Publisher publisher,int publisherId);
     ResponseEntity<?> deletePublisher(int publisherId);
+    Optional<Publisher> getPublisherById(int publisherId);
     ResponseEntity<?> addPublisher(Publisher publisher);
 }

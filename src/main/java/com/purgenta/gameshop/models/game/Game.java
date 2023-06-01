@@ -3,15 +3,15 @@ package com.purgenta.gameshop.models.game;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.purgenta.gameshop.models.cart.CartItem;
 import com.purgenta.gameshop.models.user.User;
-import com.purgenta.gameshop.validation.game.ValidateUniqueTitle;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -24,24 +24,23 @@ public class Game {
     private int id;
     @JsonIgnore
     @Column(nullable = false)
-    private boolean isSelling;
+    private boolean selling;
     @NotNull
     @Column(nullable = false)
     private double price;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     @NotNull
-    @ValidateUniqueTitle
     private String title;
 
     @NotNull
-    @Size(min = 15,max = 200)
+    @Size(min = 15,max = 500)
     @Column(nullable = false)
     private String description;
     @JsonIgnore
     @ManyToOne
     private User user;
-    @JsonIgnore
+
     @ManyToOne
     private GameCategory category;
 

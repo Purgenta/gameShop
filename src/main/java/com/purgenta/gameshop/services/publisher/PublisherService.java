@@ -30,8 +30,8 @@ public class PublisherService implements IPublisherService {
         publisherRepository.save(publisher);
         return new ResponseEntity<>(publisher,HttpStatus.OK);
     }
-
-   private Optional<Publisher> getPublisherById(int publisherId) {
+    @Override
+   public Optional<Publisher> getPublisherById(int publisherId) {
         return this.publisherRepository.findById(publisherId);
    }
 

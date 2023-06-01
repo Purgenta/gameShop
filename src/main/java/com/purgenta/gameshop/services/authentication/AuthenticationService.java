@@ -116,6 +116,7 @@ public class AuthenticationService implements IAuthenticationService {
                 var authResponse = AuthenticationResponse.builder()
                         .accessToken(accessToken)
                         .role(user.getRole().name())
+                        .email(user.getEmail())
                         .build();
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }

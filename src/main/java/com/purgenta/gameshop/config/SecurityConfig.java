@@ -33,8 +33,8 @@ public class SecurityConfig {
                     "/authentication/**",
                     "/v3/**", "/swagger-ui/**",
                     "/publishers/getPublishers",
-                    "/games/filterValues",
-                    "/games/getGames",
+                    "/games/**",
+                    "/categories/getAllCategories"
             };
 
     @Bean

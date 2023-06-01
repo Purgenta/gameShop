@@ -21,7 +21,7 @@ public class GameSpecification {
     }
     public Specification<Game> isSelling () {
         return (root,query,cb) ->
-                cb.isTrue(root.get("isSelling"));
+                cb.isTrue(root.get("selling"));
     }
     public Specification<Game> searchForGamesUnderCondition(GameFilterDto gameFilterDto) {
         Specification<Game> gameSpec;

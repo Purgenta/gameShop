@@ -22,6 +22,10 @@ public class PublisherController {
     public ResponseEntity<?> updatePublisher(@RequestBody @Valid Publisher publisher, @PathVariable int publisher_id) {
         return publisherService.updatePublisher(publisher,publisher_id);
     }
+    @DeleteMapping("/deletePublisher/{publisher_id}")
+    public ResponseEntity<?> deletePublisher(@PathVariable int publisher_id) {
+        return publisherService.deletePublisher(publisher_id);
+    }
     @GetMapping("/getPublishers")
     public List<Publisher> getPublishers() {
         return publisherService.getPublishers();
