@@ -33,4 +33,8 @@ public class CartController {
     public ResponseEntity<?> setCartItem(@Valid @RequestBody SetCartItemRequest setCartItemRequest) {
         return cartService.setCartItem(setCartItemRequest.getGame_id(), setCartItemRequest.getQuantity());
     }
+    @PostMapping("checkout")
+    public ResponseEntity<?> checkout() {
+        return cartService.checkout();
+    }
 }

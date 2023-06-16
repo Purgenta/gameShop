@@ -7,4 +7,6 @@ import lombok.Data;
 public class AddCartItemRequest {
     @Min(0)
     private int game_id;
+    @Min(1)
+    private int quantity;
 }

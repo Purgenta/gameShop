@@ -8,7 +8,8 @@ import com.purgenta.gameshop.models.user.User;
 import com.purgenta.gameshop.repositories.ICartItemRepository;
 import com.purgenta.gameshop.repositories.ICartRepository;
 import com.purgenta.gameshop.response.cart.CartItemCountResponse;
-import com.purgenta.gameshop.services.game.GameService;
+import com.purgenta.gameshop.services.game.IGameService;
+import com.purgenta.gameshop.services.order.IOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,8 @@ import java.util.Optional;
 public class CartService implements ICartService {
     private final ICartRepository iCartRepository;
     private final ICartItemRepository iCartItemRepository;
-    private final GameService gameService;
+    private final IGameService gameService;
+    private final IOrderService iOrderService;
 
 
     @Override
@@ -84,6 +86,18 @@ public class CartService implements ICartService {
     @Override
     public ResponseEntity<?> getUserCart() {
         return new ResponseEntity<>(findUserCartOrCreate().getCartItems(),HttpStatus.OK);
+    }
+
+
+    @Override
+    public ResponseEntity<?> checkout() {
+        var cart = findUserCartOrCreate();
+        iOrderService.placeOrder(cart);
+        var size = cart.getCartItems().size();
+        if(size < 1) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        cart.setCartStatus(CartStatus.ISSUED);
+        iCartRepository.save(cart);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     private Cart findUserCartOrCreate() {

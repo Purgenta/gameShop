@@ -34,7 +34,10 @@ public class SecurityConfig {
                     "/v3/**", "/swagger-ui/**",
                     "/publishers/getPublishers",
                     "/games/**",
-                    "/categories/getAllCategories"
+                    "/categories/getAllCategories",
+                    "/review/getReviews/**",
+                    "/review/getReviewEligibility/**",
+                    "/user/stats"
             };
 
     @Bean

@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import java.util.List;
 
@@ -50,8 +51,8 @@ public class Game {
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "game")
     private List<CartItem> cartItems;
-
-
+    @Formula("(select AVG(review.rating) from review where review.game_id = id)")
+    private Double avgRating;
 
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "game")
     private List<GameImage> gameImages;

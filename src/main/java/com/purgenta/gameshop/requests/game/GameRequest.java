@@ -14,7 +14,7 @@ public class GameRequest {
     private String title;
     @NotNull
     @Column(columnDefinition = "MEDIUMTEXT")
-    @Size(min = 15,max = 500)
+    @Size(min = 15,max = 1000)
     private String description;
 
     @NotNull

@@ -2,6 +2,7 @@ package com.purgenta.gameshop.controllers;
 
 import com.purgenta.gameshop.dto.GameFilterDto;
 import com.purgenta.gameshop.requests.game.GameRequest;
+import com.purgenta.gameshop.services.game.IFeaturedService;
 import com.purgenta.gameshop.services.game.IGameService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +15,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/games")
 public class GameController {
     private final IGameService gameService;
+    private final IFeaturedService iFeaturedService;
 
-    @GetMapping("/getGames")
-    public ResponseEntity<?> getGames(GameFilterDto gameFilterDto) {
+    @PostMapping("/getGames")
+    public ResponseEntity<?> getGames(@RequestBody GameFilterDto gameFilterDto) {
         return gameService.getGames(gameFilterDto);
     }
 
@@ -48,6 +50,10 @@ public class GameController {
     public ResponseEntity<?> getPageable(@PathVariable int page) {
         if(page <= 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return gameService.getPageableGames(page - 1);
+    }
+    @GetMapping("featuredGames")
+    public ResponseEntity<?> featuredGames() {
+        return iFeaturedService.featuredGames();
     }
     @GetMapping("/filterValues")
     public ResponseEntity<?> getFilterValues() {

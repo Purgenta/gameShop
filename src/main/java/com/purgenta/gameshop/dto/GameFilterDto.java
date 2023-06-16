@@ -10,8 +10,8 @@ public class GameFilterDto {
     private Double fromPrice = null;
     private Double toPrice = null;
     private Integer page = 0;
-    private List<Integer> searchCategories = null;
-    private List<Integer> searchPublishers = null;
+    private List<Integer> categories = null;
+    private List<Integer> publishers = null;
     private Integer size = 15;
     private Integer fromYear = null;
     private Integer toYear = null;

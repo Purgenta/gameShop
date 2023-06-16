@@ -4,7 +4,6 @@ import com.purgenta.gameshop.dto.GameDto;
 import com.purgenta.gameshop.dto.GameFilterDto;
 import com.purgenta.gameshop.dto.GameSpecification;
 import com.purgenta.gameshop.models.game.Game;
-import com.purgenta.gameshop.models.game.GameCategory;
 import com.purgenta.gameshop.models.game.GameImage;
 import com.purgenta.gameshop.models.user.User;
 import com.purgenta.gameshop.repositories.IGameImageRepository;
@@ -15,7 +14,6 @@ import com.purgenta.gameshop.services.publisher.IPublisherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,8 +41,8 @@ public class GameService implements IGameService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     public ResponseEntity<?> getGame(int gameId) {
-        Optional<Game> game = gameRepository.findById(gameId);
-        if (game.isPresent()) return new ResponseEntity<>(buildGameDto(game.get()), HttpStatus.OK);
+        var game = gameRepository.findById(gameId);
+        if (game.isPresent()) return new ResponseEntity<>(game.get(), HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
@@ -65,9 +63,9 @@ public class GameService implements IGameService {
     @Override
     public ResponseEntity<Map<String, Object>> getGames(GameFilterDto gameFilterDto) {
         try {
-            List<Sort.Order> orders = orderBy(gameFilterDto.getSort());
+            var orders = orderBy(gameFilterDto.getSort());
             List<Game> games;
-            Pageable pagingSort = PageRequest.of(gameFilterDto.getPage() - 1, gameFilterDto.getSize(), Sort.by(orders));
+            var pagingSort = PageRequest.of(gameFilterDto.getPage() - 1, gameFilterDto.getSize(), Sort.by(orders));
             Page<Game> pageGames;
             pageGames = gameRepository.findAll(gameSpecification.searchForGamesUnderCondition(gameFilterDto), pagingSort);
             games = pageGames.getContent();
@@ -137,6 +135,7 @@ public class GameService implements IGameService {
         }
     }
 
+
     private Sort.Direction getSortDirection(String direction) {
         if (direction.equals("asc")) {
             return Sort.Direction.ASC;
@@ -163,10 +162,12 @@ public class GameService implements IGameService {
 
     public ResponseEntity<?> getFilterValues() {
         Map<String, Double> minMax = gameRepository.findMinMax();
-        List<GameCategory> gameCategories = iGameCategoryService.getCategories();
+        var gameCategories = iGameCategoryService.getCategories();
+        var publishers = publisherService.getPublishers();
         Map<String, Object> response = new HashMap<>();
         response.put("filter", minMax);
         response.put("categories", gameCategories);
+        response.put("publishers",publishers);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -176,10 +177,16 @@ public class GameService implements IGameService {
     }
 
     public ResponseEntity<?> getPageableGames(int page) {
-        Pageable pageable = PageRequest.of(page, ADMIN_DASHBOARD_PAGEABLE);
+        var pageable = PageRequest.of(page, ADMIN_DASHBOARD_PAGEABLE);
         var games = gameRepository.findAllBySellingIsTrue(pageable);
         if (games.size() == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        long totalPages = gameRepository.count() / ADMIN_DASHBOARD_PAGEABLE;
-        return new ResponseEntity<>(new PageableGames(Math.toIntExact(totalPages),games), HttpStatus.OK);
+        System.out.println(gameRepository.count());
+        var totalPages = (gameRepository.count()) * 1.0/ ADMIN_DASHBOARD_PAGEABLE ;
+        return new ResponseEntity<>(new PageableGames((int) Math.ceil(totalPages),games), HttpStatus.OK);
+    }
+
+    @Override
+    public Long getGameCount() {
+        return gameRepository.count();
     }
 }

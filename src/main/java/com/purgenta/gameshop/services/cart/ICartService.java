@@ -1,5 +1,6 @@
 package com.purgenta.gameshop.services.cart;
 
+import com.purgenta.gameshop.models.user.User;
 import org.springframework.http.ResponseEntity;
 
 public interface ICartService {
@@ -8,4 +9,5 @@ public interface ICartService {
     ResponseEntity<?> deleteCartItem(int game_id);
     ResponseEntity<?> cartItemCount();
     ResponseEntity<?> getUserCart();
+    ResponseEntity<?> checkout();
 }

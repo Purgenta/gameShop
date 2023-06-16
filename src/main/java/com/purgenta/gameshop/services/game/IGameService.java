@@ -5,6 +5,7 @@ import com.purgenta.gameshop.models.game.Game;
 import com.purgenta.gameshop.requests.game.GameRequest;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface IGameService {
@@ -18,5 +19,6 @@ public interface IGameService {
     ResponseEntity<?> deleteGame(int game_id);
     ResponseEntity<?> updateGame(GameRequest gameRequest, int game_id);
     ResponseEntity<?> getPageableGames(int page);
+    Long getGameCount();
 
 }

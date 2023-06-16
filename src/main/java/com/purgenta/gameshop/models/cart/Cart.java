@@ -32,7 +32,7 @@ public class Cart {
     private List<CartItem> cartItems;
 
     @JsonIgnore
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private CartStatus cartStatus;
 }
 
