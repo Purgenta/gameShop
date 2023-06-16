@@ -1,13 +1,12 @@
 package com.purgenta.gameshop.controllers;
 
-import com.purgenta.gameshop.models.User;
+import com.purgenta.gameshop.response.user.UserProfile;
 import com.purgenta.gameshop.services.user.IUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -15,12 +14,11 @@ import java.util.List;
 public class UserController {
     private final IUserService userService;
     @GetMapping("/profile")
-    public User profile() {
+    public ResponseEntity<UserProfile> profile() {
         return userService.getAuthenticatedUser();
     }
-
-    @GetMapping("/list")
-    public List<String> getList() {
-        return List.of("one","two","three");
+    @GetMapping("stats")
+    public ResponseEntity<?> stats() {
+        return userService.getStats();
     }
 }

@@ -1,18 +1,20 @@
 package com.purgenta.gameshop.services.user;
 
-import com.purgenta.gameshop.models.User;
+import com.purgenta.gameshop.models.user.User;
+import com.purgenta.gameshop.response.user.UserProfile;
+import org.springframework.http.ResponseEntity;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface IUserService {
 
-    User getAuthenticatedUser();
+    ResponseEntity<UserProfile> getAuthenticatedUser();
 
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
     Optional<User> findById(Long id);
+    ResponseEntity<?> getStats();
 
-    List<User> getUsers();
+    Long getUserCount();
 
 }

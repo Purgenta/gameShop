@@ -2,7 +2,6 @@ package com.purgenta.gameshop.exceptionhandlers;
 
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,26 +17,11 @@ import java.util.Map;
 public class ExceptionHandlers {
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public Map<String, String> invalidRoute() {
-        Map<String, String> invalidRequest = new HashMap<>();
-        invalidRequest.put("errorMessage", "method not supported on the given route");
-        return invalidRequest;
-    }
+    public void invalidRoute(){}
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ConfigDataResourceNotFoundException.class)
-    public Map<String,String> notFound() {
-        System.out.println("Got executed");
-        Map<String,String> invalidRequest = new HashMap<>();
-        invalidRequest.put("errorMessage","not found");
-        return invalidRequest;
-    }
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(InternalAuthenticationServiceException.class)
-    public Map<String,String> noSuchUser() {
-        Map<String,String> invalidRequest = new HashMap<>();
-        invalidRequest.put("errorMessage","No such user exists");
-        return invalidRequest;
-    }
+    public void notFound() {}
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> getInvalidArguments(MethodArgumentNotValidException args) {

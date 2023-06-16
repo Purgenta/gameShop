@@ -1,19 +1,24 @@
 package com.purgenta.gameshop.services.game;
 
-import com.purgenta.gameshop.models.Game;
-import com.purgenta.gameshop.dto.GameDto;
+import com.purgenta.gameshop.dto.GameFilterDto;
+import com.purgenta.gameshop.models.game.Game;
+import com.purgenta.gameshop.requests.game.GameRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 
 public interface IGameService {
-    ResponseEntity<Map<String, String>> addGameImages(MultipartFile[] images,int gameId);
-
-    ResponseEntity<Map<String,String>> addGame(GameDto gameDto);
-    ResponseEntity<Map<String,String>> deleteGame(int gameId);
     ResponseEntity<?> getGame (int gameId);
-    ResponseEntity<Map<String,String>> updateGame(GameDto gameDto, int gameId);
+    ResponseEntity<?> getFilterValues();
+    ResponseEntity<?> getGames(GameFilterDto gameFilterDto);
+    Optional<Game> findGameById(int game_id);
+    ResponseEntity<?> deleteImage(long image_id);
 
-    Game buildGame(GameDto gameDto);
+    ResponseEntity<?>addGame(GameRequest request) throws Exception;
+    ResponseEntity<?> deleteGame(int game_id);
+    ResponseEntity<?> updateGame(GameRequest gameRequest, int game_id);
+    ResponseEntity<?> getPageableGames(int page);
+    Long getGameCount();
+
 }

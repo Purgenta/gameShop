@@ -1,6 +1,6 @@
 package com.purgenta.gameshop.validation.publisher;
 
-import com.purgenta.gameshop.models.Publisher;
+import com.purgenta.gameshop.models.game.Publisher;
 import com.purgenta.gameshop.repositories.IPublisherRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

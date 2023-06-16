@@ -1,6 +1,6 @@
 package com.purgenta.gameshop.services.game;
 
-import com.purgenta.gameshop.models.GameCategory;
+import com.purgenta.gameshop.models.game.GameCategory;
 import com.purgenta.gameshop.repositories.IGameCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
